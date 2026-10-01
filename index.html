@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Commission Pro</title>
+  <meta name="description" content="Responsive insurance agent commission management dashboard." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <!-- AUTH SCREEN -->
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand brand-auth"><span class="brand-icon">📊</span><span>Agent Commission Pro</span></div>
+      <p class="auth-subtitle">Insurance commission management platform</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">Login</button>
+        <button class="auth-tab" data-auth-tab="register">Create Account</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <label>Email
+          <input id="loginEmail" type="email" placeholder="you@example.com" required />
+        </label>
+        <label>Password
+          <input id="loginPassword" type="password" placeholder="Enter password" required />
+        </label>
+        <label>Role
+          <select id="loginRole">
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Agent">Agent</option>
+          </select>
+        </label>
+        <button class="primary-btn full" type="submit">Login</button>
+        <button class="link-btn" type="button" id="demoLogin">Use Demo Admin Account</button>
+      </form>
+
+      <form id="registerForm" class="auth-form hidden">
+        <div class="form-grid">
+          <label>Full Name
+            <input id="regName" type="text" placeholder="Your full name" required />
+          </label>
+          <label>Role
+            <select id="regRole">
+              <option>Agent</option>
+              <option>Manager</option>
+            </select>
+          </label>
+        </div>
+        <label>Email
+          <input id="regEmail" type="email" placeholder="you@example.com" required />
+        </label>
+        <label>Password
+          <input id="regPassword" type="password" minlength="6" placeholder="Minimum 6 characters" required />
+        </label>
+        <button class="primary-btn full" type="submit">Create Account</button>
+      </form>
+
+      <div class="demo-note">
+        <strong>Demo:</strong> admin@commissionpro.com / admin123
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <div id="app" class="app hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">📊</span>
+        <div><strong>CommissionPro</strong><small>Insurance Platform</small></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard">🏠 <span>Dashboard</span></button>
+        <button class="nav-item" data-section="agents">👥 <span>Agent Management</span></button>
+        <button class="nav-item" data-section="structure">🧩 <span>Commission Structure</span></button>
+        <button class="nav-item" data-section="calculation">🧮 <span>Commission Calculation</span></button>
+        <button class="nav-item" data-section="payouts">💳 <span>Commission Payout</span></button>
+        <button class="nav-item" data-section="performance">📈 <span>Agent Performance</span></button>
+        <button class="nav-item" data-section="history">🕘 <span>Commission History</span></button>
+        <button class="nav-item" data-section="reports">📄 <span>Reports</span></button>
+        <button class="nav-item" data-section="forecast">🔮 <span>Commission Forecast</span><em>NEW</em></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-section="profile">👤 <span>Profile</span></button>
+        <button class="nav-item" data-section="settings">⚙️ <span>Settings</span></button>
+        <button class="logout-btn" id="logoutBtn">↪ <span>Logout</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu">☰</button>
+        <div class="top-search"><span>⌕</span><input id="globalSearch" placeholder="Search agents, policies, payouts..." /></div>
+        <div class="top-actions">
+          <button class="icon-btn" id="notificationBtn" title="Notifications">🔔<i>3</i></button>
+          <button class="profile" id="profileMenu" type="button" aria-label="Open profile">
+            <div class="avatar" id="avatar">AD</div>
+            <div><strong id="profileName">Admin</strong><small id="profileRole">Administrator</small></div>
+            <span>⌄</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active-page">
+          <div class="page-heading">
+            <div><span class="eyebrow">OVERVIEW</span><h1>Dashboard</h1><p>Track commissions, agent performance and payouts in one place.</p></div>
+            <div class="heading-actions"><button class="secondary-btn" id="refreshDashboard">↻ Refresh</button><button class="primary-btn" data-section-jump="calculation">+ Calculate Commission</button></div>
+          </div>
+          <div class="stat-grid">
+            <article class="stat-card"><div class="stat-icon gold">💰</div><div><small>Total Commission</small><h2 id="statCommission">₹12,84,560</h2><span class="up">↑ 12.5% <b>vs last month</b></span></div></article>
+            <article class="stat-card"><div class="stat-icon green">👥</div><div><small>Active Agents</small><h2 id="statAgents">48</h2><span class="up">↑ 4 new <b>this month</b></span></div></article>
+            <article class="stat-card"><div class="stat-icon orange">⏳</div><div><small>Pending Payouts</small><h2>₹2,18,400</h2><span class="neutral">14 payouts pending</span></div></article>
+            <article class="stat-card"><div class="stat-icon blue">📊</div><div><small>Policies Sold</small><h2>326</h2><span class="up">↑ 8.2% <b>vs last month</b></span></div></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel chart-panel">
+              <div class="panel-head"><div><h3>Commission Overview</h3><p>Monthly commission earned</p></div><select id="chartRange"><option>Last 6 months</option><option>Last 12 months</option></select></div>
+              <div class="chart">
+                <div class="y-axis"><span>₹3L</span><span>₹2L</span><span>₹1L</span><span>₹0</span></div>
+                <div class="bars" id="commissionBars"></div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><div><h3>Commission by Tier</h3><p>Current month</p></div><button class="more-btn">•••</button></div>
+              <div class="donut-wrap"><div class="donut"><div><strong>₹12.8L</strong><small>Total</small></div></div><div class="legend"><span><i class="dot platinum"></i>Platinum <b>30%</b></span><span><i class="dot gold-dot"></i>Gold <b>25%</b></span><span><i class="dot silver"></i>Silver <b>20%</b></span><span><i class="dot bronze"></i>Bronze <b>15%</b></span><span><i class="dot starter"></i>Starter <b>10%</b></span></div></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid bottom-grid">
+            <article class="panel table-panel">
+              <div class="panel-head"><div><h3>Top Performing Agents</h3><p>Based on current month commission</p></div><button class="text-btn" data-section-jump="performance">View all →</button></div>
+              <div class="table-scroll"><table><thead><tr><th>Agent</th><th>Tier</th><th>Policies</th><th>Commission</th><th>Status</th></tr></thead><tbody id="topAgentsBody"></tbody></table></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><div><h3>Recent Payouts</h3><p>Latest payment activity</p></div><button class="text-btn" data-section-jump="payouts">View all →</button></div>
+              <div id="recentPayouts" class="activity-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <!-- AGENTS -->
+        <section id="agents" class="page">
+          <div class="page-heading"><div><span class="eyebrow">MANAGEMENT</span><h1>Agent Management</h1><p>Add, edit and monitor insurance agents.</p></div><button class="primary-btn" id="addAgentBtn">+ Add Agent</button></div>
+          <div class="toolbar"><div class="filter-search">⌕ <input id="agentSearch" placeholder="Search by name or email..." /></div><select id="tierFilter"><option value="">All Tiers</option><option>Platinum</option><option>Gold</option><option>Silver</option><option>Bronze</option><option>Starter</option></select><select id="statusFilter"><option value="">All Status</option><option>Active</option><option>Inactive</option></select></div>
+          <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Agent</th><th>Contact</th><th>Tier</th><th>Total Sales</th><th>Commission</th><th>Status</th><th>Action</th></tr></thead><tbody id="agentsBody"></tbody></table></div></article>
+        </section>
+
+        <!-- STRUCTURE -->
+        <section id="structure" class="page">
+          <div class="page-heading"><div><span class="eyebrow">CONFIGURATION</span><h1>Commission Structure</h1><p>Define tier-based rates, slabs and bonus rules.</p></div><button class="primary-btn" id="addTierBtn">+ Add Tier</button></div>
+          <div class="tier-grid" id="tierCards"></div>
+          <article class="panel table-panel"><div class="panel-head"><div><h3>Commission Rules</h3><p>Rules used by the calculation engine.</p></div></div><div class="table-scroll"><table><thead><tr><th>Commission Type</th><th>Rate</th><th>Eligibility</th><th>Minimum Sales</th><th>Maximum Sales</th><th>Status</th></tr></thead><tbody id="rulesBody"></tbody></table></div></article>
+        </section>
+
+        <!-- CALCULATION -->
+        <section id="calculation" class="page">
+          <div class="page-heading"><div><span class="eyebrow">CALCULATION ENGINE</span><h1>Commission Calculation</h1><p>Calculate commission from policy premium and agent tier.</p></div></div>
+          <div class="two-col">
+            <article class="panel form-panel">
+              <h3>Calculate a Commission</h3>
+              <p class="muted">Enter policy and sales information.</p>
+              <form id="calcForm">
+                <label>Agent<select id="calcAgent"></select></label>
+                <div class="form-grid"><label>Policy ID<input id="policyId" value="POL-2026-1042" required /></label><label>Policy Type<select id="policyType"><option>Life Insurance</option><option>Health Insurance</option><option>Motor Insurance</option><option>Travel Insurance</option></select></label></div>
+                <div class="form-grid"><label>Premium Amount<input id="premium" type="number" min="0" value="100000" required /></label><label>Commission Rate<input id="calcRate" type="number" step="0.1" value="25" required /></label></div>
+                <label>Commission Type<select id="commissionType"><option>First Year Commission</option><option>Renewal Commission</option><option>Bonus Commission</option><option>Performance Bonus</option></select></label>
+                <button class="primary-btn full" type="submit">Calculate Commission</button>
+              </form>
+            </article>
+            <article class="panel result-panel"><div class="result-icon">₹</div><small>CALCULATED COMMISSION</small><div class="big-result" id="calcResult">₹25,000</div><div class="result-row"><span>Premium</span><strong id="resultPremium">₹1,00,000</strong></div><div class="result-row"><span>Rate</span><strong id="resultRate">25%</strong></div><div class="result-row"><span>Agent Tier</span><strong id="resultTier">Gold</strong></div><div class="result-row"><span>Commission Type</span><strong id="resultType">First Year</strong></div><div class="success-box">✓ Calculation completed successfully</div></article>
+          </div>
+        </section>
+
+        <!-- PAYOUTS -->
+        <section id="payouts" class="page">
+          <div class="page-heading"><div><span class="eyebrow">PAYMENTS</span><h1>Commission Payout</h1><p>Process payouts and track payment status.</p></div><button class="primary-btn" id="processPayoutBtn">+ Process Payout</button></div>
+          <div class="stat-grid three"><article class="stat-card"><div class="stat-icon green">✓</div><div><small>Paid</small><h2>₹8,42,160</h2><span class="up">82 payouts</span></div></article><article class="stat-card"><div class="stat-icon orange">⏳</div><div><small>Pending</small><h2>₹2,18,400</h2><span class="neutral">14 payouts</span></div></article><article class="stat-card"><div class="stat-icon red">!</div><div><small>Failed / Hold</small><h2>₹36,800</h2><span class="neutral">5 payouts</span></div></article></div>
+          <article class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Reference</th><th>Agent</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="payoutBody"></tbody></table></div></article>
+        </section>
+
+        <!-- PERFORMANCE -->
+        <section id="performance" class="page">
+          <div class="page-heading"><div><span class="eyebrow">ANALYTICS</span><h1>Agent Performance</h1><p>View sales rankings, commission and performance metrics.</p></div></div>
+          <div class="performance-grid" id="performanceCards"></div>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="history" class="page">
+          <div class="page-heading"><div><span class="eyebrow">AUDIT TRAIL</span><h1>Commission History</h1><p>Complete history of commissions earned by each agent.</p></div><button class="secondary-btn" id="clearHistoryFilter">Reset Filters</button></div>
+          <article class="panel table-panel"><div class="toolbar"><div class="filter-search">⌕ <input id="historySearch" placeholder="Search policy, agent or reference..." /></div><select id="historyStatus"><option value="">All Status</option><option>Approved</option><option>Pending</option><option>Paid</option></select></div><div class="table-scroll"><table><thead><tr><th>Date</th><th>Policy</th><th>Agent</th><th>Premium</th><th>Rate</th><th>Commission</th><th>Status</th></tr></thead><tbody id="historyBody"></tbody></table></div></article>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="page">
+          <div class="page-heading"><div><span class="eyebrow">REPORTING</span><h1>Reports</h1><p>Generate commission, payout and agent performance reports.</p></div></div>
+          <div class="report-grid">
+            <article class="report-card"><span>📊</span><h3>Commission Report</h3><p>Monthly commission by agent and tier.</p><button class="secondary-btn report-btn" data-report="Commission">Generate</button></article>
+            <article class="report-card"><span>💳</span><h3>Payout Report</h3><p>Paid, pending and failed payouts.</p><button class="secondary-btn report-btn" data-report="Payout">Generate</button></article>
+            <article class="report-card"><span>👥</span><h3>Agent Performance</h3><p>Sales, policies and rankings.</p><button class="secondary-btn report-btn" data-report="Performance">Generate</button></article>
+            <article class="report-card"><span>🔮</span><h3>Forecast Report</h3><p>Projected commissions and growth.</p><button class="secondary-btn report-btn" data-report="Forecast">Generate</button></article>
+          </div>
+          <article class="panel report-preview"><div class="panel-head"><div><h3>Report Preview</h3><p id="reportStatus">Select a report to generate a preview.</p></div><button class="primary-btn" id="exportCsv">Export CSV</button></div><pre id="reportPreviewText">No report generated yet.</pre></article>
+        </section>
+
+        <!-- NEW FORECAST -->
+        <section id="forecast" class="page">
+          <div class="page-heading"><div><span class="eyebrow">NEW MODULE</span><h1>Commission Forecast</h1><p>Estimate future commission using current sales trends and tier rates.</p></div><button class="primary-btn" id="runForecast">Run Forecast</button></div>
+          <div class="forecast-hero panel"><div><span class="forecast-badge">NEW</span><h2>Next 3 Months Projection</h2><p>Based on the last six months of commission activity.</p></div><div class="forecast-total" id="forecastTotal">₹14,92,600</div></div>
+          <div class="forecast-grid"><article class="panel"><h3>Projected Commission</h3><div class="forecast-bars"><div><span>Oct</span><i style="height:55%"></i><b>₹4.3L</b></div><div><span>Nov</span><i style="height:70%"></i><b>₹5.1L</b></div><div><span>Dec</span><i style="height:86%"></i><b>₹5.5L</b></div></div></article><article class="panel"><h3>Forecast Inputs</h3><div class="input-stat"><span>Average monthly growth</span><strong>8.6%</strong></div><div class="input-stat"><span>Active agents</span><strong>48</strong></div><div class="input-stat"><span>Average commission rate</span><strong>22.4%</strong></div><div class="input-stat"><span>Expected policies</span><strong>364</strong></div></article></div>
+          <div class="info-banner">💡 <strong>Planning tip:</strong> Use the forecast to estimate payout requirements and identify agents approaching a higher commission tier.</div>
+        </section>
+
+        <!-- PROFILE -->
+        <section id="profile" class="page">
+          <div class="page-heading"><div><span class="eyebrow">ACCOUNT</span><h1>Profile</h1><p>View and update your account information.</p></div></div>
+          <article class="panel form-panel">
+            <form id="profileForm">
+              <label>Full Name<input id="settingName" autocomplete="name" required /></label>
+              <label>Email<input id="settingEmail" type="email" autocomplete="email" required /></label>
+              <label>Role<input id="settingRole" disabled /></label>
+              <button class="primary-btn" type="submit">Save Changes</button>
+            </form>
+          </article>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="settings" class="page">
+          <div class="page-heading"><div><span class="eyebrow">PREFERENCES</span><h1>Settings</h1><p>Manage your dashboard preferences.</p></div></div>
+          <div class="settings-grid">
+            <article class="panel form-panel"><h3>Preferences</h3><label class="toggle-row"><span>Email notifications</span><input type="checkbox" checked /></label><label class="toggle-row"><span>Payout reminders</span><input type="checkbox" checked /></label><label class="toggle-row"><span>Weekly performance summary</span><input type="checkbox" /></label><label class="toggle-row"><span>Dark mode</span><input id="darkModeToggle" type="checkbox" /></label></article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-backdrop hidden" id="agentModal">
+    <div class="modal"><button class="close-modal" data-close="agentModal">×</button><h2>Add Agent</h2><p>Add a new agent to your commission system.</p><form id="agentForm"><div class="form-grid"><label>Name<input id="newAgentName" required /></label><label>Email<input id="newAgentEmail" type="email" required /></label></div><div class="form-grid"><label>Tier<select id="newAgentTier"><option>Platinum</option><option>Gold</option><option>Silver</option><option>Bronze</option><option>Starter</option></select></label><label>Phone<input id="newAgentPhone" placeholder="+91 98765 43210" /></label></div><button class="primary-btn full">Add Agent</button></form></div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="tierModal">
+    <div class="modal"><button class="close-modal" data-close="tierModal">×</button><h2>Add Commission Tier</h2><p>Create a custom commission tier.</p><form id="tierForm"><div class="form-grid"><label>Tier Name<input id="newTierName" required /></label><label>Commission %<input id="newTierRate" type="number" min="0" max="100" required /></label></div><label>Minimum Sales<input id="newTierMin" type="number" value="0" /></label><button class="primary-btn full">Create Tier</button></form></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
